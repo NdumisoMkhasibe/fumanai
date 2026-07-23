@@ -79,13 +79,17 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "FumanAI — Your Autonomous Dream Job Assistant" },
-      { name: "description", content: "FumanAI helps you find roles, tailor ATS-ready CVs and cover letters, and land interviews — all without signing up." },
+      { title: "FumanAI — Home" },
+      { name: "description", content: "Start a tailored job application in seconds. FumanAI drafts ATS-friendly CVs, cover letters, and outreach emails from your local profile." },
       { name: "author", content: "FumanAI" },
-      { property: "og:title", content: "FumanAI — Your Autonomous Dream Job Assistant" },
-      { property: "og:description", content: "AI-powered CVs, cover letters, and application emails tailored to every job. No sign-up required." },
+      { property: "og:title", content: "FumanAI — Home" },
+      { property: "og:description", content: "Start a tailored job application in seconds. FumanAI drafts ATS-friendly CVs, cover letters, and outreach emails from your local profile." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
+      { name: "twitter:title", content: "FumanAI — Home" },
+      { name: "twitter:description", content: "Start a tailored job application in seconds. FumanAI drafts ATS-friendly CVs, cover letters, and outreach emails from your local profile." },
+      { property: "og:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/OaWtHr1CMnTOmFpxZFssBjtMcRk1/social-images/social-1784800936565-Gemini_Generated_Image_8onpvk8onpvk8onp.webp" },
+      { name: "twitter:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/OaWtHr1CMnTOmFpxZFssBjtMcRk1/social-images/social-1784800936565-Gemini_Generated_Image_8onpvk8onpvk8onp.webp" },
     ],
     links: [
       {

@@ -10,7 +10,7 @@ export const Route = createFileRoute("/")({
       { title: "FumanAI — Home" },
       { name: "description", content: "Start a tailored job application in seconds. FumanAI drafts ATS-friendly CVs, cover letters, and outreach emails from your local profile." },
       { property: "og:title", content: "FumanAI — Home" },
-      { property: "og:description", content: "Start a tailored job application in seconds with FumanAI." },
+      { property: "og:description", content: "Start a tailored job application in seconds. FumanAI drafts ATS-friendly CVs, cover letters, and outreach emails from your local profile." },
     ],
   }),
   component: Index,
