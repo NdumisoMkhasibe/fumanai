@@ -12,7 +12,7 @@ Helping job seekers receive their dream opportunities through Artificial Intelli
 
 ---
 
-## 📖 About
+##  About
 
 **FumanAI** is an AI-powered career application assistant designed to simplify the job application process.
 
@@ -24,21 +24,21 @@ Unlike traditional career platforms, FumanAI focuses on helping users create hig
 
 ---
 
-## 🎯 Mission
+##  Mission
 
 > FumanAI empowers job seekers by using artificial intelligence to simplify the job application process. It helps users identify suitable opportunities, analyze job requirements, and generate personalized application documents that improve their chances of securing interviews.
 
 ---
 
-## 🌍 Vision
+##  Vision
 
 > To become the smartest AI-powered career application assistant, helping millions of people connect with opportunities that match their skills and ambitions.
 
 ---
 
-# ✨ Features
+#  Features
 
-## 🏠 Home
+##  Home
 
 - Conversational onboarding
 - No account required
@@ -49,7 +49,7 @@ Unlike traditional career platforms, FumanAI focuses on helping users create hig
 
 ---
 
-## 📄 AI Document Generator
+##  AI Document Generator
 
 Generate personalized:
 
@@ -72,7 +72,7 @@ Each section is individually copyable.
 
 ---
 
-## 📋 Job Tracker
+##  Job Tracker
 
 Built-in Kanban board for tracking job applications.
 
@@ -90,7 +90,7 @@ Cards are fully draggable between columns.
 
 ---
 
-## 📧 Smart Email Generator
+##  Smart Email Generator
 
 Generate professional emails using AI.
 
@@ -108,7 +108,7 @@ Outputs:
 
 ---
 
-## 📝 Meeting Notes Summarizer
+##  Meeting Notes Summarizer
 
 Transform lengthy meeting notes into concise summaries.
 
@@ -121,7 +121,7 @@ Automatically extracts:
 
 ---
 
-## 🔍 AI Research Assistant
+##  AI Research Assistant
 
 AI-powered research assistant capable of:
 
@@ -132,7 +132,7 @@ AI-powered research assistant capable of:
 
 ---
 
-## 💬 AI Chat
+##  AI Chat
 
 A general-purpose AI assistant for everyday questions.
 
@@ -146,7 +146,7 @@ Features:
 
 ---
 
-## 👤 Profile Management
+##  Profile Management
 
 Manage multiple career profiles.
 
@@ -162,7 +162,7 @@ No login required.
 
 ---
 
-## ⚙️ Settings
+##  Settings
 
 - Appearance (Light / Dark / System)
 - Responsible AI
@@ -172,7 +172,7 @@ No login required.
 
 ---
 
-# 🎨 Brand Identity
+#  Brand Identity
 
 ## Primary Colour
 
@@ -193,7 +193,7 @@ Charcoal Black
 
 ---
 
-# 🔒 Privacy First
+#  Privacy First
 
 FumanAI is designed with privacy in mind.
 
@@ -205,7 +205,7 @@ FumanAI is designed with privacy in mind.
 
 ---
 
-# 🧠 Responsible AI
+#  Responsible AI
 
 FumanAI assists users by generating professional application documents.
 
@@ -217,7 +217,7 @@ However:
 
 ---
 
-# 🛠️ Tech Stack
+#  Tech Stack
 
 - React
 - TypeScript
@@ -228,7 +228,7 @@ However:
 
 ---
 
-# 📱 Responsive Design
+#  Responsive Design
 
 Designed for:
 
@@ -238,7 +238,7 @@ Designed for:
 
 ---
 
-# 🚀 Future Roadmap
+#  Future Roadmap
 
 Future versions may include:
 
@@ -253,7 +253,7 @@ Future versions may include:
 
 ---
 
-# 🤝 Contributing
+#  Contributing
 
 Contributions, ideas, and feedback are welcome.
 
@@ -261,13 +261,13 @@ Please open an issue or submit a pull request.
 
 ---
 
-# 📄 License
+#  License
 
 This project is licensed under the MIT License.
 
 ---
 
-# ❤️ Built With Purpose
+#  Built With Purpose
 
 FumanAI was created to make job applications smarter, faster, and more accessible.
 
