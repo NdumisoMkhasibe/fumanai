@@ -36,11 +36,20 @@ function read(): Store {
 }
 
 const listeners = new Set<() => void>();
+let cache: Store = EMPTY;
+let cacheLoaded = false;
+function loadCache() {
+  cache = read();
+  cacheLoaded = true;
+}
 function emit() {
+  loadCache();
   listeners.forEach((l) => l());
 }
 function write(s: Store) {
   localStorage.setItem(KEY, JSON.stringify(s));
+  cache = s;
+  cacheLoaded = true;
   emit();
 }
 
@@ -49,9 +58,13 @@ export function useProfiles() {
   useEffect(() => setHydrated(true), []);
   const state = useSyncExternalStore(
     (cb) => {
+      if (!cacheLoaded) loadCache();
       listeners.add(cb);
       const handler = (e: StorageEvent) => {
-        if (e.key === KEY) cb();
+        if (e.key === KEY) {
+          loadCache();
+          cb();
+        }
       };
       window.addEventListener("storage", handler);
       return () => {
@@ -59,7 +72,7 @@ export function useProfiles() {
         window.removeEventListener("storage", handler);
       };
     },
-    () => read(),
+    () => cache,
     () => EMPTY,
   );
   return { ...state, hydrated };
