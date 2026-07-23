@@ -14,6 +14,8 @@ import {
 import { useState, type ReactNode } from "react";
 import { Sheet, SheetContent, SheetTrigger, SheetTitle } from "@/components/ui/sheet";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
+import logoAsset from "@/assets/fumanai-logo.png.asset.json";
+import markAsset from "@/assets/fumanai-mark.png";
 
 const NAV = [
   { to: "/", label: "Home", icon: Home },
@@ -29,16 +31,13 @@ const NAV = [
 
 function Brand() {
   return (
-    <div className="flex items-center gap-2 px-2">
-      <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-accent text-accent-foreground font-[Poppins] font-bold">
-        F
-      </div>
-      <div>
-        <div className="font-[Poppins] font-semibold leading-tight text-sidebar-foreground">FumanAI</div>
-        <div className="text-[10px] uppercase tracking-wider text-sidebar-foreground/60">
-          Dream Job Assistant
-        </div>
-      </div>
+    <div className="px-4">
+      <img
+        src={logoAsset.url}
+        alt="FumanAI — Your Autonomous Dream Job Assistant"
+        className="w-full max-w-[220px] select-none"
+        draggable={false}
+      />
     </div>
   );
 }
@@ -79,10 +78,8 @@ export function AppShell({ children }: { children: ReactNode }) {
       <div className="flex min-w-0 flex-1 flex-col">
         <header className="flex items-center justify-between border-b border-border/60 px-4 py-3 md:hidden">
           <div className="flex items-center gap-2">
-            <div className="flex h-8 w-8 items-center justify-center rounded-md bg-primary text-primary-foreground font-[Poppins] font-bold">
-              F
-            </div>
-            <span className="font-[Poppins] font-semibold">FumanAI</span>
+            <img src={markAsset} alt="FumanAI" className="h-8 w-8 rounded-md object-cover" />
+            <span className="font-[Poppins] font-semibold tracking-tight">FumanAI</span>
           </div>
           <Sheet open={open} onOpenChange={setOpen}>
             <SheetTrigger asChild>
