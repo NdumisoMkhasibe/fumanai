@@ -1,0 +1,12 @@
+# FumanAI
+
+> Your Autonomous Dream Job Assistant — AI-generated CVs, cover letters, and application emails, without sign-up.
+
+FumanAI helps job seekers identify opportunities, analyze job requirements, and produce tailored, ATS-friendly application materials. Profiles are stored locally in the browser.
+
+## Pages
+
+- [Home](/): Start a tailored application or manage local profiles.
+- [Generate Application](/job): Paste a job ad and generate a CV, cover letter, and email.
+- [Profiles](/profiles): Manage local career profiles.
+- [Settings](/settings): Privacy, responsible AI, and clear local data.
