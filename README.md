@@ -1,7 +1,7 @@
 # 🤖 FumanAI
 
 <p align="center">
-  <img src="logo.png" alt="FumanAI Logo" width="220"/>
+  <img src="Gemini_Generated_Image_8onpvk8onpvk8onp.png" alt="FumanAI Logo" width="220"/>
 </p>
 
 <h3 align="center">Your Autonomous Dream Job Assistant</h3>
