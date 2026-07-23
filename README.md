@@ -1,13 +1,36 @@
-# 🤖 FumanAI
-
 <p align="center">
-  <img src="Gemini_Generated_Image_8onpvk8onpvk8onp.png" alt="FumanAI Logo" width="220"/>
+  <img src="src/assets/Gemini_Generated_Image_8onpvk8onpvk8onp.png" alt="FumanAI Logo" width="220"/>
 </p>
 
-<h3 align="center">Your Autonomous Dream Job Assistant</h3>
+<h1 align="center">FumanAI</h1>
 
 <p align="center">
-Helping job seekers receive their dream opportunities through Artificial Intelligence.
+  <strong>Your Autonomous Dream Job Assistant</strong>
+</p>
+
+<p align="center">
+  Helping people receive their dream jobs through Artificial Intelligence.
+</p>
+
+<p align="center">
+
+![React](https://img.shields.io/badge/React-19-61DAFB?style=for-the-badge&logo=react&logoColor=white)
+![TypeScript](https://img.shields.io/badge/TypeScript-5.x-3178C6?style=for-the-badge&logo=typescript&logoColor=white)
+![Vite](https://img.shields.io/badge/Vite-7-646CFF?style=for-the-badge&logo=vite&logoColor=white)
+![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-4-06B6D4?style=for-the-badge&logo=tailwindcss&logoColor=white)
+![AI Powered](https://img.shields.io/badge/AI-Powered-242423?style=for-the-badge)
+![MIT License](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)
+
+</p>
+
+<p align="center">
+
+<a href="#features">Features</a> •
+<a href="#tech-stack">Tech Stack</a> •
+<a href="#installation">Installation</a> •
+<a href="#roadmap">Roadmap</a> •
+<a href="#contributing">Contributing</a>
+
 </p>
 
 ---
