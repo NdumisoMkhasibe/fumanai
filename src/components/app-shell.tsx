@@ -78,28 +78,28 @@ export function AppShell({ children }: { children: ReactNode }) {
       <div className="flex min-w-0 flex-1 flex-col">
         <header className="flex items-center justify-between border-b border-border/60 px-4 py-3 md:hidden">
           <div className="flex items-center gap-2">
+            <Sheet open={open} onOpenChange={setOpen}>
+              <SheetTrigger asChild>
+                <button
+                  aria-label="Open menu"
+                  className="rounded-md p-2 hover:bg-muted"
+                >
+                  <Menu className="h-5 w-5" />
+                </button>
+              </SheetTrigger>
+              <SheetContent side="left" className="w-72 bg-sidebar p-0 text-sidebar-foreground border-sidebar-border">
+                <VisuallyHidden>
+                  <SheetTitle>FumanAI navigation</SheetTitle>
+                </VisuallyHidden>
+                <div className="py-6">
+                  <Brand />
+                  <NavList onNavigate={() => setOpen(false)} />
+                </div>
+              </SheetContent>
+            </Sheet>
             <img src={markAsset} alt="FumanAI" className="h-8 w-8 rounded-md object-cover" />
             <span className="font-[Poppins] font-semibold tracking-tight">FumanAI</span>
           </div>
-          <Sheet open={open} onOpenChange={setOpen}>
-            <SheetTrigger asChild>
-              <button
-                aria-label="Open menu"
-                className="rounded-md p-2 hover:bg-muted"
-              >
-                <Menu className="h-5 w-5" />
-              </button>
-            </SheetTrigger>
-            <SheetContent side="left" className="w-72 bg-sidebar p-0 text-sidebar-foreground border-sidebar-border">
-              <VisuallyHidden>
-                <SheetTitle>FumanAI navigation</SheetTitle>
-              </VisuallyHidden>
-              <div className="py-6">
-                <Brand />
-                <NavList onNavigate={() => setOpen(false)} />
-              </div>
-            </SheetContent>
-          </Sheet>
         </header>
 
         <main className="flex-1 animate-in fade-in duration-300">{children}</main>
