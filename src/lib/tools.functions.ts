@@ -1,5 +1,6 @@
 import { createServerFn } from "@tanstack/react-start";
 import { generateText, Output, NoObjectGeneratedError } from "ai";
+void Output;
 import { z } from "zod";
 
 async function generateStructured<T>(args: {
