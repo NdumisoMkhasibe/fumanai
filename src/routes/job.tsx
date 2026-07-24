@@ -4,6 +4,7 @@ import { useServerFn } from "@tanstack/react-start";
 import { useMutation } from "@tanstack/react-query";
 import { useProfiles, getActive } from "@/lib/profiles";
 import { generateApplication, type GeneratedApplication } from "@/lib/generate.functions";
+import { addJobCard } from "@/lib/tracker";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Card } from "@/components/ui/card";
@@ -88,6 +89,17 @@ function JobPage() {
       if (!payload.profile) throw new Error("No active profile");
       const { id: _id, createdAt: _c, updatedAt: _u, ...rest } = payload.profile;
       return await generate({ data: { profile: rest, jobAdvertisement: payload.jobAdvertisement } });
+    },
+    onSuccess: (data) => {
+      if (data?.job) {
+        addJobCard({
+          title: data.job.title,
+          company: data.job.company,
+          location: data.job.location,
+          matchScore: data.job.matchScore,
+        });
+        toast.success("Added to Job Tracker");
+      }
     },
     onError: (e) => toast.error(e instanceof Error ? e.message : "Something went wrong."),
   });
