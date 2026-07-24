@@ -1,5 +1,5 @@
 import { createServerFn } from "@tanstack/react-start";
-import { generateText, Output } from "ai";
+import { generateText, Output, NoObjectGeneratedError } from "ai";
 import { z } from "zod";
 
 const ProfileSchema = z.object({
@@ -45,6 +45,12 @@ const ResultSchema = z.object({
     subject: z.string(),
     body: z.string(),
   }),
+  job: z.object({
+    title: z.string(),
+    company: z.string(),
+    location: z.string(),
+    matchScore: z.number(),
+  }),
 });
 
 export type GeneratedApplication = z.infer<typeof ResultSchema>;
@@ -65,7 +71,8 @@ RULES:
 - Never highlight missing skills; instead, emphasize transferable strengths from the candidate profile.
 - Use plain, professional language, active voice, quantified impact when the candidate provided data.
 - Match keywords from the job advertisement only when supported by the candidate's actual profile.
-- Keep the cover letter under 350 words. Keep the application email under 180 words.`;
+- Keep the cover letter under 350 words. Keep the application email under 180 words.
+- Also extract the job's title, company, and location from the advertisement (use "Unknown" if missing) and score the candidate/job fit as a number from 0 to 10 with one decimal place (e.g. 7.4).`;
 
     const prompt = `CANDIDATE PROFILE (source of truth):
 Name: ${data.profile.name}
@@ -81,7 +88,7 @@ Additional information: ${data.profile.extras}
 JOB ADVERTISEMENT:
 ${data.jobAdvertisement}
 
-Task: Produce a tailored ATS-friendly CV, a cover letter, and an application email. Extract the recipient email from the job ad if present, otherwise use "hiring@company.example". For the email subject use "Application: <Role> — <Candidate Name>".`;
+Task: Produce a tailored ATS-friendly CV, a cover letter, and an application email. Extract the recipient email from the job ad if present, otherwise use "hiring@company.example". For the email subject use "Application: <Role> — <Candidate Name>". Also fill in job.title, job.company, job.location, and job.matchScore (0-10, one decimal).`;
 
     try {
       const { output } = await generateText({
@@ -92,7 +99,32 @@ Task: Produce a tailored ATS-friendly CV, a cover letter, and an application ema
       });
       return output;
     } catch (err) {
+      if (NoObjectGeneratedError.isInstance(err) && err.text) {
+        const parsed = tryExtractJson(err.text);
+        if (parsed) {
+          const check = ResultSchema.safeParse(parsed);
+          if (check.success) return check.data;
+        }
+      }
       const message = err instanceof Error ? err.message : String(err);
       throw new Error(`Generation failed: ${message}`);
     }
   });
+
+function tryExtractJson(text: string): unknown {
+  const trimmed = text.trim().replace(/^```(?:json)?\s*/i, "").replace(/```$/i, "").trim();
+  try {
+    return JSON.parse(trimmed);
+  } catch {
+    const first = trimmed.indexOf("{");
+    const last = trimmed.lastIndexOf("}");
+    if (first >= 0 && last > first) {
+      try {
+        return JSON.parse(trimmed.slice(first, last + 1));
+      } catch {
+        return undefined;
+      }
+    }
+    return undefined;
+  }
+}
