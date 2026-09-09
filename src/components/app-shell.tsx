@@ -1,3 +1,5 @@
+import { useAuth } from "react-oidc-context";
+
 import { Link } from "@tanstack/react-router";
 import {
   Home,
@@ -62,6 +64,7 @@ function NavList({ onNavigate }: { onNavigate?: () => void }) {
 }
 
 export function AppShell({ children }: { children: ReactNode }) {
+  const auth = useAuth();
   const [open, setOpen] = useState(false);
   return (
     <div className="flex min-h-screen bg-background">
@@ -70,7 +73,24 @@ export function AppShell({ children }: { children: ReactNode }) {
         <Brand />
         <NavList />
         <div className="mt-auto px-4 py-4 text-[11px] text-sidebar-foreground/50">
-          Your data stays in this browser.
+          <p>Your data stays in this browser.</p>
+          <div className="mt-3">
+            {auth.isAuthenticated ? (
+              <button
+                onClick={() => auth.removeUser()}
+                className="text-sm underline"
+              >
+                Sign out
+              </button>
+            ) : (
+              <button
+                onClick={() => auth.signinRedirect()}
+                className="text-sm underline"
+              >
+                Sign in with Cognito
+              </button>
+            )}
+          </div>
         </div>
       </aside>
 
@@ -105,5 +125,6 @@ export function AppShell({ children }: { children: ReactNode }) {
         <main className="flex-1 animate-in fade-in duration-300">{children}</main>
       </div>
     </div>
+    
   );
 }
