@@ -9,6 +9,14 @@ export const cognitoAuthConfig = {
   response_type: "code",
 
   scope: "openid email",
+
+  onSigninCallback: () => {
+    window.history.replaceState(
+      {},
+      document.title,
+      window.location.pathname
+    );
+  },
 };
 
 export const cognitoDomain =

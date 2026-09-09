@@ -1,3 +1,6 @@
+import { AuthProvider } from "react-oidc-context";
+import { cognitoAuthConfig } from "@/lib/auth";
+
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import {
   Outlet,
@@ -131,9 +134,11 @@ function RootComponent() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <AppShell>
-        <Outlet />
-      </AppShell>
+      <AuthProvider {...cognitoAuthConfig}>
+          <AppShell>
+            <Outlet />
+          </AppShell>
+      </AuthProvider>
       <Toaster />
     </QueryClientProvider>
   );
