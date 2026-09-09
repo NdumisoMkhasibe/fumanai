@@ -65,6 +65,31 @@ function NavList({ onNavigate }: { onNavigate?: () => void }) {
 
 export function AppShell({ children }: { children: ReactNode }) {
   const auth = useAuth();
+  const testProfileApi = async () => {
+    if (!auth.user?.access_token) {
+      console.log("No access token available");
+      return;
+    }
+
+    try {
+      const response = await fetch(
+        "https://rrg31ef4vj.execute-api.af-south-1.amazonaws.com/profiles/test-profile-001",
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${auth.user.access_token}`,
+          },
+        }
+      );
+
+      const data = await response.json();
+
+      console.log("Status:", response.status);
+      console.log("Profile response:", data);
+    } catch (error) {
+      console.error("API test failed:", error);
+      }
+    };
   const [open, setOpen] = useState(false);
   return (
     <div className="flex min-h-screen bg-background">
@@ -73,24 +98,34 @@ export function AppShell({ children }: { children: ReactNode }) {
         <Brand />
         <NavList />
         <div className="mt-auto px-4 py-4 text-[11px] text-sidebar-foreground/50">
-          <p>Your data stays in this browser.</p>
-          <div className="mt-3">
-            {auth.isAuthenticated ? (
+          {auth.isAuthenticated ? (
+            <div className="space-y-2">
+              <p className="break-all">
+                Signed in as: {auth.user?.profile.email}
+              </p>
+
               <button
                 onClick={() => auth.removeUser()}
                 className="text-sm underline"
               >
                 Sign out
               </button>
-            ) : (
+
               <button
-                onClick={() => auth.signinRedirect()}
+                onClick={testProfileApi}
                 className="text-sm underline"
               >
-                Sign in with Cognito
+                Test profile API
               </button>
-            )}
-          </div>
+            </div>
+          ) : (
+            <button
+              onClick={() => auth.signinRedirect()}
+              className="text-sm underline"
+            >
+              Sign in with Cognito
+            </button>
+          )}
         </div>
       </aside>
 
