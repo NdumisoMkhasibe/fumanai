@@ -237,9 +237,14 @@ function ProfilesPage() {
   };
 
   useEffect(() => {
-  if (!accessToken) {
-    return;
-  }
+  loadProfiles();
+  }, [accessToken]);
+
+// Load cloud preferences separately
+  useEffect(() => {
+    if (!accessToken) {
+      return;
+    }
 
   const loadPreferences = async () => {
     try {
@@ -560,4 +565,5 @@ function ProfilesPage() {
       </Dialog>
     </div>
   );
+  
 }
