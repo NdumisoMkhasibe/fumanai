@@ -27,6 +27,11 @@ import { Badge } from "@/components/ui/badge";
 import { Trash2, Star, Pencil, Plus } from "lucide-react";
 import { toast } from "sonner";
 
+import {
+  getPreferences,
+  updatePreferences,
+} from "@/lib/preferences-api";
+
 export const Route = createFileRoute("/profiles")({
   head: () => ({
     meta: [
@@ -232,18 +237,32 @@ function ProfilesPage() {
   };
 
   useEffect(() => {
-  loadProfiles();
-  }, [accessToken]);
+  if (!accessToken) {
+    return;
+  }
 
-  useEffect(() => {
-    const savedActiveId = localStorage.getItem(
-      "fumanai.active-profile.v1"
-    );
+  const loadPreferences = async () => {
+    try {
+      const preferences =
+        await getPreferences(accessToken);
 
-    if (savedActiveId) {
-      setActiveId(savedActiveId);
+      setActiveId(
+        preferences.activeProfileId
+      );
+    } catch (error) {
+      console.error(
+        "Failed to load preferences:",
+        error
+      );
+
+      toast.error(
+        "Could not load profile preferences"
+      );
     }
-  }, []);
+  };
+
+  loadPreferences();
+}, [accessToken]);
 
   const handleSetActive = (profileId: string) => {
     setActiveId(profileId);
