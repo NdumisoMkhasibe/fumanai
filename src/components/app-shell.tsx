@@ -14,7 +14,12 @@ import {
   Menu,
 } from "lucide-react";
 import { useState, type ReactNode } from "react";
-import { Sheet, SheetContent, SheetTrigger, SheetTitle } from "@/components/ui/sheet";
+import {
+  Sheet,
+  SheetContent,
+  SheetTrigger,
+  SheetTitle,
+} from "@/components/ui/sheet";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 import logoAsset from "@/assets/fumanai-logo.png.asset.json";
 import markAsset from "@/assets/fumanai-mark.png";
@@ -65,6 +70,8 @@ function NavList({ onNavigate }: { onNavigate?: () => void }) {
 
 export function AppShell({ children }: { children: ReactNode }) {
   const auth = useAuth();
+  const [open, setOpen] = useState(false);
+
   const testProfileApi = async () => {
     if (!auth.user?.access_token) {
       console.log("No access token available");
@@ -88,15 +95,56 @@ export function AppShell({ children }: { children: ReactNode }) {
       console.log("Profile response:", data);
     } catch (error) {
       console.error("API test failed:", error);
-      }
-    };
-  const [open, setOpen] = useState(false);
+    }
+  };
+
+  const createProfileApi = async () => {
+    if (!auth.user?.access_token) {
+      console.log("No access token available");
+      return;
+    }
+
+    try {
+      const response = await fetch(
+        "https://rrg31ef4vj.execute-api.af-south-1.amazonaws.com/profiles",
+        {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${auth.user.access_token}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            profileId: "main-profile",
+            name: "Test Profile",
+            email: auth.user?.profile.email || "",
+            phone: "",
+            targetRole: "Software Developer",
+            summary: "Authenticated FumanAI profile test.",
+            education: [],
+            skills: ["JavaScript", "Python"],
+            experience: [],
+            extras: {},
+          }),
+        }
+      );
+
+      const data = await response.json();
+
+      console.log("Create status:", response.status);
+      console.log("Create response:", data);
+    } catch (error) {
+      console.error("Create profile failed:", error);
+    }
+  };
+
   return (
     <div className="flex min-h-screen bg-background">
       {/* Desktop sidebar */}
       <aside className="hidden md:flex md:w-64 md:flex-col md:bg-sidebar md:py-6">
         <Brand />
+
         <NavList />
+
         <div className="mt-auto px-4 py-4 text-[11px] text-sidebar-foreground/50">
           {auth.isAuthenticated ? (
             <div className="space-y-2">
@@ -116,6 +164,13 @@ export function AppShell({ children }: { children: ReactNode }) {
                 className="text-sm underline"
               >
                 Test profile API
+              </button>
+
+              <button
+                onClick={createProfileApi}
+                className="text-sm underline"
+              >
+                Create profile test
               </button>
             </div>
           ) : (
@@ -142,24 +197,38 @@ export function AppShell({ children }: { children: ReactNode }) {
                   <Menu className="h-5 w-5" />
                 </button>
               </SheetTrigger>
-              <SheetContent side="left" className="w-72 bg-sidebar p-0 text-sidebar-foreground border-sidebar-border">
+
+              <SheetContent
+                side="left"
+                className="w-72 border-sidebar-border bg-sidebar p-0 text-sidebar-foreground"
+              >
                 <VisuallyHidden>
                   <SheetTitle>FumanAI navigation</SheetTitle>
                 </VisuallyHidden>
+
                 <div className="py-6">
                   <Brand />
                   <NavList onNavigate={() => setOpen(false)} />
                 </div>
               </SheetContent>
             </Sheet>
-            <img src={markAsset} alt="FumanAI" className="h-8 w-8 rounded-md object-cover" />
-            <span className="font-[Poppins] font-semibold tracking-tight">FumanAI</span>
+
+            <img
+              src={markAsset}
+              alt="FumanAI"
+              className="h-8 w-8 rounded-md object-cover"
+            />
+
+            <span className="font-[Poppins] font-semibold tracking-tight">
+              FumanAI
+            </span>
           </div>
         </header>
 
-        <main className="flex-1 animate-in fade-in duration-300">{children}</main>
+        <main className="flex-1 animate-in fade-in duration-300">
+          {children}
+        </main>
       </div>
     </div>
-    
   );
 }
