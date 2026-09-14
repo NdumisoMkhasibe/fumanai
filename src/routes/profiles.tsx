@@ -386,10 +386,12 @@ function ProfilesPage() {
       );
 
       if (activeId === profile.profileId) {
-        setActiveId(null);
-        localStorage.removeItem(
-          "fumanai.active-profile.v1"
+        await updatePreferences(
+          null,
+          accessToken
         );
+
+        setActiveId(null);
       }
 
       toast.success("Deleted");
