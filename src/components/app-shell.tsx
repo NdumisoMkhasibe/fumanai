@@ -72,71 +72,6 @@ export function AppShell({ children }: { children: ReactNode }) {
   const auth = useAuth();
   const [open, setOpen] = useState(false);
 
-  const testProfileApi = async () => {
-    if (!auth.user?.access_token) {
-      console.log("No access token available");
-      return;
-    }
-
-    try {
-      const response = await fetch(
-        "https://rrg31ef4vj.execute-api.af-south-1.amazonaws.com/profiles/main-profile",
-        {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${auth.user.access_token}`,
-          },
-        }
-      );
-
-      const data = await response.json();
-
-      console.log("Status:", response.status);
-      console.log("Profile response:", data);
-    } catch (error) {
-      console.error("API test failed:", error);
-    }
-  };
-
-  const createProfileApi = async () => {
-    if (!auth.user?.access_token) {
-      console.log("No access token available");
-      return;
-    }
-
-    try {
-      const response = await fetch(
-        "https://rrg31ef4vj.execute-api.af-south-1.amazonaws.com/profiles",
-        {
-          method: "POST",
-          headers: {
-            Authorization: `Bearer ${auth.user.access_token}`,
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            profileId: "main-profile",
-            name: "Test Profile",
-            email: auth.user?.profile.email || "",
-            phone: "",
-            targetRole: "Software Developer",
-            summary: "Authenticated FumanAI profile test.",
-            education: [],
-            skills: ["JavaScript", "Python"],
-            experience: [],
-            extras: {},
-          }),
-        }
-      );
-
-      const data = await response.json();
-
-      console.log("Create status:", response.status);
-      console.log("Create response:", data);
-    } catch (error) {
-      console.error("Create profile failed:", error);
-    }
-  };
-
   return (
     <div className="flex min-h-screen bg-background">
       {/* Desktop sidebar */}
@@ -159,19 +94,6 @@ export function AppShell({ children }: { children: ReactNode }) {
                 Sign out
               </button>
 
-              <button
-                onClick={testProfileApi}
-                className="text-sm underline"
-              >
-                Test profile API
-              </button>
-
-              <button
-                onClick={createProfileApi}
-                className="text-sm underline"
-              >
-                Create profile test
-              </button>
             </div>
           ) : (
             <button
