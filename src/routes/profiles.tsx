@@ -208,6 +208,7 @@ function ProfilesPage() {
 
   const accessToken = auth.user?.access_token;
 
+
   const loadProfiles = async () => {
     if (!accessToken) {
       setProfiles([]);
@@ -220,6 +221,7 @@ function ProfilesPage() {
 
       const loadedProfiles = await getProfiles(accessToken);
 
+
       setProfiles(loadedProfiles);
     } catch (error) {
       console.error("Failed to load profiles:", error);
@@ -230,7 +232,7 @@ function ProfilesPage() {
   };
 
   useEffect(() => {
-    loadProfiles();
+  loadProfiles();
   }, [accessToken]);
 
   useEffect(() => {

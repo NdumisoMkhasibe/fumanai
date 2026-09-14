@@ -26,16 +26,27 @@ function authHeaders(accessToken: string) {
 export async function getProfiles(
   accessToken: string
 ): Promise<Profile[]> {
-  const response = await fetch(`${API_BASE_URL}/profiles`, {
-    method: "GET",
-    headers: authHeaders(accessToken),
-  });
+
+  const response = await fetch(
+    `${API_BASE_URL}/profiles`,
+    {
+      method: "GET",
+      headers: authHeaders(accessToken),
+    }
+  );
+
 
   if (!response.ok) {
-    throw new Error(`Failed to load profiles: ${response.status}`);
+  
+    throw new Error(
+      `Failed to load profiles: ${response.status}`
+    );
   }
 
-  return response.json();
+  const data = await response.json();
+
+
+  return data;
 }
 
 export async function getProfile(
@@ -51,24 +62,34 @@ export async function getProfile(
   );
 
   if (!response.ok) {
-    throw new Error(`Failed to load profile: ${response.status}`);
+    throw new Error(
+      `Failed to load profile: ${response.status}`
+    );
   }
 
   return response.json();
 }
 
 export async function createProfile(
-  profile: Omit<Profile, "profileId" | "createdAt" | "updatedAt">,
+  profile: Omit<
+    Profile,
+    "profileId" | "createdAt" | "updatedAt"
+  >,
   accessToken: string
 ): Promise<Profile> {
-  const response = await fetch(`${API_BASE_URL}/profiles`, {
-    method: "POST",
-    headers: authHeaders(accessToken),
-    body: JSON.stringify(profile),
-  });
+  const response = await fetch(
+    `${API_BASE_URL}/profiles`,
+    {
+      method: "POST",
+      headers: authHeaders(accessToken),
+      body: JSON.stringify(profile),
+    }
+  );
 
   if (!response.ok) {
-    throw new Error(`Failed to create profile: ${response.status}`);
+    throw new Error(
+      `Failed to create profile: ${response.status}`
+    );
   }
 
   return response.json();
@@ -76,7 +97,10 @@ export async function createProfile(
 
 export async function updateProfile(
   profileId: string,
-  profile: Omit<Profile, "profileId" | "createdAt" | "updatedAt">,
+  profile: Omit<
+    Profile,
+    "profileId" | "createdAt" | "updatedAt"
+  >,
   accessToken: string
 ): Promise<Profile> {
   const response = await fetch(
@@ -89,7 +113,9 @@ export async function updateProfile(
   );
 
   if (!response.ok) {
-    throw new Error(`Failed to update profile: ${response.status}`);
+    throw new Error(
+      `Failed to update profile: ${response.status}`
+    );
   }
 
   return response.json();
@@ -108,6 +134,8 @@ export async function deleteProfile(
   );
 
   if (!response.ok) {
-    throw new Error(`Failed to delete profile: ${response.status}`);
+    throw new Error(
+      `Failed to delete profile: ${response.status}`
+    );
   }
 }
