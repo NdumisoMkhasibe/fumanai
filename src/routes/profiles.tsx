@@ -313,7 +313,9 @@ function ProfilesPage() {
       ]);
 
       if (!activeId) {
-        handleSetActive(created.profileId);
+        await handleSetActive(
+          created.profileId
+        );
       }
 
       toast.success("Saved");
