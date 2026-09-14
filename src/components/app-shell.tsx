@@ -80,7 +80,7 @@ export function AppShell({ children }: { children: ReactNode }) {
 
     try {
       const response = await fetch(
-        "https://rrg31ef4vj.execute-api.af-south-1.amazonaws.com/profiles/test-profile-001",
+        "https://rrg31ef4vj.execute-api.af-south-1.amazonaws.com/profiles/main-profile",
         {
           method: "GET",
           headers: {
