@@ -264,16 +264,36 @@ function ProfilesPage() {
   loadPreferences();
 }, [accessToken]);
 
-  const handleSetActive = (profileId: string) => {
-    setActiveId(profileId);
+  const handleSetActive = async (
+  profileId: string
+) => {
+  if (!accessToken) {
+    toast.error("Please sign in first");
+    return;
+  }
 
-    localStorage.setItem(
-      "fumanai.active-profile.v1",
-      profileId
+  try {
+    await updatePreferences(
+      profileId,
+      accessToken
     );
 
-    toast.success("Active profile switched");
-  };
+    setActiveId(profileId);
+
+    toast.success(
+      "Active profile switched"
+    );
+  } catch (error) {
+    console.error(
+      "Failed to update active profile:",
+      error
+    );
+
+    toast.error(
+      "Could not switch active profile"
+    );
+  }
+};
 
   const handleCreate = async (form: ProfileFormData) => {
     if (!accessToken) {
