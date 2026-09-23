@@ -261,6 +261,5 @@ export async function clearChatMessages(
     );
   }
 
-
   return parsed.data.deletedCount;
 }
