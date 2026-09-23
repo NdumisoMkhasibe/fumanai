@@ -15,6 +15,7 @@ import { Route as EmailRouteImport } from './routes/email'
 import { Route as JobRouteImport } from './routes/job'
 import { Route as NotesRouteImport } from './routes/notes'
 import { Route as ProfilesRouteImport } from './routes/profiles'
+import { Route as ResearchRouteImport } from './routes/research'
 import { Route as SettingsRouteImport } from './routes/settings'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as TrackerRouteImport } from './routes/tracker'
@@ -49,6 +50,11 @@ const ProfilesRoute = ProfilesRouteImport.update({
   path: '/profiles',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ResearchRoute = ResearchRouteImport.update({
+  id: '/research',
+  path: '/research',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const SettingsRoute = SettingsRouteImport.update({
   id: '/settings',
   path: '/settings',
@@ -72,6 +78,7 @@ export interface FileRoutesByFullPath {
   '/job': typeof JobRoute
   '/notes': typeof NotesRoute
   '/profiles': typeof ProfilesRoute
+  '/research': typeof ResearchRoute
   '/settings': typeof SettingsRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/tracker': typeof TrackerRoute
@@ -83,6 +90,7 @@ export interface FileRoutesByTo {
   '/job': typeof JobRoute
   '/notes': typeof NotesRoute
   '/profiles': typeof ProfilesRoute
+  '/research': typeof ResearchRoute
   '/settings': typeof SettingsRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/tracker': typeof TrackerRoute
@@ -95,6 +103,7 @@ export interface FileRoutesById {
   '/job': typeof JobRoute
   '/notes': typeof NotesRoute
   '/profiles': typeof ProfilesRoute
+  '/research': typeof ResearchRoute
   '/settings': typeof SettingsRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/tracker': typeof TrackerRoute
@@ -108,6 +117,7 @@ export interface FileRouteTypes {
     | '/job'
     | '/notes'
     | '/profiles'
+    | '/research'
     | '/settings'
     | '/sitemap.xml'
     | '/tracker'
@@ -119,6 +129,7 @@ export interface FileRouteTypes {
     | '/job'
     | '/notes'
     | '/profiles'
+    | '/research'
     | '/settings'
     | '/sitemap.xml'
     | '/tracker'
@@ -130,6 +141,7 @@ export interface FileRouteTypes {
     | '/job'
     | '/notes'
     | '/profiles'
+    | '/research'
     | '/settings'
     | '/sitemap.xml'
     | '/tracker'
@@ -142,6 +154,7 @@ export interface RootRouteChildren {
   JobRoute: typeof JobRoute
   NotesRoute: typeof NotesRoute
   ProfilesRoute: typeof ProfilesRoute
+  ResearchRoute: typeof ResearchRoute
   SettingsRoute: typeof SettingsRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   TrackerRoute: typeof TrackerRoute
@@ -191,6 +204,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProfilesRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/research': {
+      id: '/research'
+      path: '/research'
+      fullPath: '/research'
+      preLoaderRoute: typeof ResearchRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/settings': {
       id: '/settings'
       path: '/settings'
@@ -222,6 +242,7 @@ const rootRouteChildren: RootRouteChildren = {
   JobRoute: JobRoute,
   NotesRoute: NotesRoute,
   ProfilesRoute: ProfilesRoute,
+  ResearchRoute: ResearchRoute,
   SettingsRoute: SettingsRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   TrackerRoute: TrackerRoute,
