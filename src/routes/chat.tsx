@@ -14,8 +14,14 @@ import {
 
 import {
   chatReply,
-  type ChatMessage,
 } from "@/lib/chat-api";
+
+import {
+  clearChatMessages,
+  getChatMessages,
+  saveChatMessage,
+  type StoredChatMessage,
+} from "@/lib/chat-history-api";
 
 import {
   Card,
@@ -74,10 +80,6 @@ export const Route =
   });
 
 
-const STORAGE_KEY =
-  "fumanai.chat.v1";
-
-
 function ChatPage() {
   const auth =
     useAuth();
@@ -88,7 +90,7 @@ function ChatPage() {
     setMessages,
   ] =
     useState<
-      ChatMessage[]
+      StoredChatMessage[]
     >([]);
 
 
@@ -102,6 +104,20 @@ function ChatPage() {
   const [
     pending,
     setPending,
+  ] =
+    useState(false);
+
+
+  const [
+    loadingHistory,
+    setLoadingHistory,
+  ] =
+    useState(true);
+
+
+  const [
+    clearing,
+    setClearing,
   ] =
     useState(false);
 
@@ -124,57 +140,68 @@ function ChatPage() {
 
 
   useEffect(() => {
-    try {
-      const raw =
-        localStorage.getItem(
-          STORAGE_KEY
-        );
+    if (
+      !accessToken
+    ) {
+      setLoadingHistory(
+        false
+      );
+
+      return;
+    }
 
 
-      if (raw) {
-        const parsed =
-          JSON.parse(raw);
+    let active =
+      true;
 
 
-        if (
-          Array.isArray(
-            parsed
-          )
-        ) {
+    async function loadHistory() {
+      setLoadingHistory(
+        true
+      );
+
+
+      try {
+        const history =
+          await getChatMessages(
+            accessToken
+          );
+
+
+        if (active) {
           setMessages(
-            parsed
+            history
+          );
+        }
+      } catch (error) {
+        if (active) {
+          toast.error(
+            error instanceof Error
+              ? error.message
+              : "Failed to load chat history."
+          );
+        }
+      } finally {
+        if (active) {
+          setLoadingHistory(
+            false
           );
         }
       }
-    } catch (error) {
-      console.error(
-        "Failed to load local chat:",
-        error
-      );
     }
 
 
-    taRef.current
-      ?.focus();
-  }, []);
+    void loadHistory();
+
+
+    return () => {
+      active =
+        false;
+    };
+  }, [accessToken]);
 
 
   useEffect(() => {
-    try {
-      localStorage.setItem(
-        STORAGE_KEY,
-        JSON.stringify(
-          messages
-        )
-      );
-    } catch (error) {
-      console.error(
-        "Failed to save local chat:",
-        error
-      );
-    }
-
-
     scrollRef.current
       ?.scrollTo({
         top:
@@ -184,7 +211,22 @@ function ChatPage() {
         behavior:
           "smooth",
       });
-  }, [messages]);
+  }, [
+    messages,
+    pending,
+  ]);
+
+
+  useEffect(() => {
+    if (
+      !loadingHistory
+    ) {
+      taRef.current
+        ?.focus();
+    }
+  }, [
+    loadingHistory,
+  ]);
 
 
   async function send() {
@@ -194,7 +236,8 @@ function ChatPage() {
 
     if (
       !text ||
-      pending
+      pending ||
+      loadingHistory
     ) {
       return;
     }
@@ -209,52 +252,67 @@ function ChatPage() {
     }
 
 
-    const next:
-      ChatMessage[] = [
-        ...messages,
-
-        {
-          role:
-            "user",
-
-          content:
-            text,
-        },
-      ];
-
-
-    setMessages(
-      next
-    );
-
     setInput("");
 
     setPending(true);
 
 
     try {
+      const savedUserMessage =
+        await saveChatMessage(
+          "user",
+          text,
+          accessToken
+        );
+
+
+      const nextMessages =
+        [
+          ...messages,
+          savedUserMessage,
+        ];
+
+
+      setMessages(
+        nextMessages
+      );
+
+
+      const aiMessages =
+        nextMessages.map(
+          (message) => ({
+            role:
+              message.role,
+
+            content:
+              message.content,
+          })
+        );
+
+
       const {
         reply,
       } =
         await chatReply(
           {
             messages:
-              next,
+              aiMessages,
           },
           accessToken
         );
 
 
+      const savedAssistantMessage =
+        await saveChatMessage(
+          "assistant",
+          reply,
+          accessToken
+        );
+
+
       setMessages([
-        ...next,
-
-        {
-          role:
-            "assistant",
-
-          content:
-            reply,
-        },
+        ...nextMessages,
+        savedAssistantMessage,
       ]);
     } catch (error) {
       toast.error(
@@ -263,7 +321,9 @@ function ChatPage() {
           : "Chat failed."
       );
     } finally {
-      setPending(false);
+      setPending(
+        false
+      );
 
 
       setTimeout(
@@ -276,18 +336,43 @@ function ChatPage() {
   }
 
 
-  function clearChat() {
-    setMessages([]);
+  async function clearChat() {
+    if (
+      !accessToken ||
+      clearing
+    ) {
+      return;
+    }
+
+
+    setClearing(
+      true
+    );
 
 
     try {
-      localStorage.removeItem(
-        STORAGE_KEY
+      await clearChatMessages(
+        accessToken
+      );
+
+
+      setMessages(
+        []
+      );
+
+
+      toast.success(
+        "Chat history cleared."
       );
     } catch (error) {
-      console.error(
-        "Failed to clear local chat:",
-        error
+      toast.error(
+        error instanceof Error
+          ? error.message
+          : "Failed to clear chat history."
+      );
+    } finally {
+      setClearing(
+        false
       );
     }
   }
@@ -350,11 +435,19 @@ function ChatPage() {
           <Button
             variant="ghost"
             size="sm"
-            onClick={
-              clearChat
+            onClick={() =>
+              void clearChat()
+            }
+            disabled={
+              clearing ||
+              pending
             }
           >
-            <Trash2 className="mr-1 h-4 w-4" />
+            {clearing ? (
+              <Loader2 className="mr-1 h-4 w-4 animate-spin" />
+            ) : (
+              <Trash2 className="mr-1 h-4 w-4" />
+            )}
 
             Clear
           </Button>
@@ -369,45 +462,55 @@ function ChatPage() {
           }
           className="flex-1 space-y-4 overflow-y-auto p-4"
         >
-          {messages.length ===
-            0 && (
-            <div className="flex h-full items-center justify-center text-center text-sm text-muted-foreground">
-              Start a conversation. Your messages are currently stored locally in this browser.
+          {loadingHistory && (
+            <div className="flex h-full items-center justify-center text-sm text-muted-foreground">
+              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+
+              Loading chat history…
             </div>
           )}
 
 
-          {messages.map(
-            (
-              message,
-              index
-            ) => (
-              <div
-                key={
-                  index
-                }
-                className={
-                  message.role ===
-                  "user"
-                    ? "flex justify-end"
-                    : "flex justify-start"
-                }
-              >
+          {!loadingHistory &&
+            messages.length ===
+              0 && (
+            <div className="flex h-full items-center justify-center text-center text-sm text-muted-foreground">
+              Start a conversation. Your chat history is stored in your FumanAI account and can sync across devices.
+            </div>
+          )}
+
+
+          {!loadingHistory &&
+            messages.map(
+              (
+                message
+              ) => (
                 <div
+                  key={
+                    message.messageId
+                  }
                   className={
                     message.role ===
                     "user"
-                      ? "max-w-[80%] whitespace-pre-wrap rounded-2xl bg-primary px-4 py-2 text-sm text-primary-foreground"
-                      : "max-w-[80%] whitespace-pre-wrap rounded-2xl bg-muted px-4 py-2 text-sm"
+                      ? "flex justify-end"
+                      : "flex justify-start"
                   }
                 >
-                  {
-                    message.content
-                  }
+                  <div
+                    className={
+                      message.role ===
+                      "user"
+                        ? "max-w-[80%] whitespace-pre-wrap rounded-2xl bg-primary px-4 py-2 text-sm text-primary-foreground"
+                        : "max-w-[80%] whitespace-pre-wrap rounded-2xl bg-muted px-4 py-2 text-sm"
+                    }
+                  >
+                    {
+                      message.content
+                    }
+                  </div>
                 </div>
-              </div>
-            )
-          )}
+              )
+            )}
 
 
           {pending && (
@@ -456,6 +559,10 @@ function ChatPage() {
                 }
               }}
               className="min-h-[44px] resize-none"
+              disabled={
+                loadingHistory ||
+                pending
+              }
             />
 
 
@@ -465,7 +572,8 @@ function ChatPage() {
               }
               disabled={
                 !input.trim() ||
-                pending
+                pending ||
+                loadingHistory
               }
             >
               {pending ? (
@@ -479,5 +587,4 @@ function ChatPage() {
       </Card>
     </div>
   );
-  
 }
