@@ -128,68 +128,82 @@ function renderCvText(
     `${cv.header.email} · ${cv.header.phone}`
   );
 
-  lines.push("");
+  if (
+    cv.professionalSummary.trim()
+      .length > 0
+  ) {
+    lines.push("");
+    lines.push(
+      "PROFESSIONAL SUMMARY"
+    );
 
-  lines.push(
-    "PROFESSIONAL SUMMARY"
-  );
+    lines.push(
+      cv.professionalSummary
+    );
+  }
 
-  lines.push(
-    cv.professionalSummary
-  );
+  if (
+    cv.education.length > 0
+  ) {
+    lines.push("");
+    lines.push(
+      "EDUCATION"
+    );
 
-  lines.push("");
+    cv.education.forEach(
+      (education) => {
+        lines.push(
+          `• ${education}`
+        );
+      }
+    );
+  }
 
-  lines.push(
-    "EDUCATION"
-  );
+  if (
+    cv.coreSkills.length > 0
+  ) {
+    lines.push("");
+    lines.push(
+      "CORE SKILLS"
+    );
 
-  cv.education.forEach(
-    (education) => {
-      lines.push(
-        `• ${education}`
-      );
-    }
-  );
+    lines.push(
+      cv.coreSkills.join(" · ")
+    );
+  }
 
-  lines.push("");
+  if (
+    cv.workExperience.length > 0
+  ) {
+    lines.push("");
+    lines.push(
+      "WORK EXPERIENCE"
+    );
 
-  lines.push(
-    "CORE SKILLS"
-  );
+    cv.workExperience.forEach(
+      (work) => {
+        lines.push(
+          `${work.role} — ${work.organization} (${work.period})`
+        );
 
-  lines.push(
-    cv.coreSkills.join(" · ")
-  );
+        work.bullets.forEach(
+          (bullet) => {
+            lines.push(
+              `  • ${bullet}`
+            );
+          }
+        );
 
-  lines.push("");
-
-  lines.push(
-    "WORK EXPERIENCE"
-  );
-
-  cv.workExperience.forEach(
-    (work) => {
-      lines.push(
-        `${work.role} — ${work.organization} (${work.period})`
-      );
-
-      work.bullets.forEach(
-        (bullet) => {
-          lines.push(
-            `  • ${bullet}`
-          );
-        }
-      );
-
-      lines.push("");
-    }
-  );
+        lines.push("");
+      }
+    );
+  }
 
   if (
     cv.additionalInformation.length >
     0
   ) {
+    lines.push("");
     lines.push(
       "ADDITIONAL INFORMATION"
     );
@@ -212,12 +226,13 @@ function download(
   content: string,
   mime = "text/plain"
 ) {
-  const blob = new Blob(
-    [content],
-    {
-      type: mime,
-    }
-  );
+  const blob =
+    new Blob(
+      [content],
+      {
+        type: mime,
+      }
+    );
 
   const url =
     URL.createObjectURL(
@@ -228,9 +243,7 @@ function download(
     document.createElement("a");
 
   anchor.href = url;
-
-  anchor.download =
-    name;
+  anchor.download = name;
 
   anchor.click();
 
@@ -296,6 +309,7 @@ function JobPage() {
               getProfiles(
                 accessToken
               ),
+
               getPreferences(
                 accessToken
               ),
@@ -577,7 +591,6 @@ function JobPage() {
             {mutation.isPending ? (
               <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-
                 Generating…
               </>
             ) : (
@@ -670,116 +683,138 @@ function JobPage() {
                 </div>
 
 
-                <section className="mt-4">
-                  <h3 className="text-xs uppercase tracking-wider text-muted-foreground">
-                    Professional summary
-                  </h3>
+                {result.cv
+                  .professionalSummary
+                  .trim()
+                  .length > 0 && (
+                  <section className="mt-4">
+                    <h3 className="text-xs uppercase tracking-wider text-muted-foreground">
+                      Professional summary
+                    </h3>
 
-                  <p className="mt-1">
-                    {
-                      result.cv
-                        .professionalSummary
-                    }
-                  </p>
-                </section>
-
-
-                <section className="mt-4">
-                  <h3 className="text-xs uppercase tracking-wider text-muted-foreground">
-                    Education
-                  </h3>
-
-                  <ul className="mt-1 list-disc pl-5">
-                    {result.cv.education.map(
-                      (
-                        education,
-                        index
-                      ) => (
-                        <li
-                          key={index}
-                        >
-                          {
-                            education
-                          }
-                        </li>
-                      )
-                    )}
-                  </ul>
-                </section>
+                    <p className="mt-1">
+                      {
+                        result.cv
+                          .professionalSummary
+                      }
+                    </p>
+                  </section>
+                )}
 
 
-                <section className="mt-4">
-                  <h3 className="text-xs uppercase tracking-wider text-muted-foreground">
-                    Core skills
-                  </h3>
+                {result.cv.education
+                  .length > 0 && (
+                  <section className="mt-4">
+                    <h3 className="text-xs uppercase tracking-wider text-muted-foreground">
+                      Education
+                    </h3>
 
-                  <p className="mt-1">
-                    {result.cv.coreSkills.join(
-                      " · "
-                    )}
-                  </p>
-                </section>
-
-
-                <section className="mt-4">
-                  <h3 className="text-xs uppercase tracking-wider text-muted-foreground">
-                    Work experience
-                  </h3>
-
-                  <div className="mt-1 space-y-4">
-                    {result.cv.workExperience.map(
-                      (
-                        work,
-                        index
-                      ) => (
-                        <div
-                          key={index}
-                        >
-                          <div className="font-medium">
-                            {
-                              work.role
-                            }{" "}
-                            —{" "}
-                            {
-                              work.organization
+                    <ul className="mt-1 list-disc pl-5">
+                      {result.cv.education.map(
+                        (
+                          education,
+                          index
+                        ) => (
+                          <li
+                            key={
+                              index
                             }
-                          </div>
-
-                          <div className="text-sm text-muted-foreground">
+                          >
                             {
-                              work.period
+                              education
                             }
-                          </div>
+                          </li>
+                        )
+                      )}
+                    </ul>
+                  </section>
+                )}
 
-                          <ul className="mt-1 list-disc pl-5">
-                            {work.bullets.map(
-                              (
-                                bullet,
-                                bulletIndex
-                              ) => (
-                                <li
-                                  key={
+
+                {result.cv.coreSkills
+                  .length > 0 && (
+                  <section className="mt-4">
+                    <h3 className="text-xs uppercase tracking-wider text-muted-foreground">
+                      Core skills
+                    </h3>
+
+                    <p className="mt-1">
+                      {result.cv.coreSkills.join(
+                        " · "
+                      )}
+                    </p>
+                  </section>
+                )}
+
+
+                {result.cv
+                  .workExperience
+                  .length > 0 && (
+                  <section className="mt-4">
+                    <h3 className="text-xs uppercase tracking-wider text-muted-foreground">
+                      Work experience
+                    </h3>
+
+                    <div className="mt-1 space-y-4">
+                      {result.cv.workExperience.map(
+                        (
+                          work,
+                          index
+                        ) => (
+                          <div
+                            key={
+                              index
+                            }
+                          >
+                            <div className="font-medium">
+                              {
+                                work.role
+                              }{" "}
+                              —{" "}
+                              {
+                                work.organization
+                              }
+                            </div>
+
+                            <div className="text-sm text-muted-foreground">
+                              {
+                                work.period
+                              }
+                            </div>
+
+                            {work.bullets
+                              .length >
+                              0 && (
+                              <ul className="mt-1 list-disc pl-5">
+                                {work.bullets.map(
+                                  (
+                                    bullet,
                                     bulletIndex
-                                  }
-                                >
-                                  {
-                                    bullet
-                                  }
-                                </li>
-                              )
+                                  ) => (
+                                    <li
+                                      key={
+                                        bulletIndex
+                                      }
+                                    >
+                                      {
+                                        bullet
+                                      }
+                                    </li>
+                                  )
+                                )}
+                              </ul>
                             )}
-                          </ul>
-                        </div>
-                      )
-                    )}
-                  </div>
-                </section>
+                          </div>
+                        )
+                      )}
+                    </div>
+                  </section>
+                )}
 
 
                 {result.cv
                   .additionalInformation
-                  .length >
-                  0 && (
+                  .length > 0 && (
                   <section className="mt-4">
                     <h3 className="text-xs uppercase tracking-wider text-muted-foreground">
                       Additional
