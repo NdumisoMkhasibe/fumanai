@@ -10,6 +10,7 @@ import {
 
 import { useAuth } from "react-oidc-context";
 import { useMutation } from "@tanstack/react-query";
+import { jsPDF } from "jspdf";
 
 import {
   generateApplication,
@@ -129,7 +130,8 @@ function renderCvText(
   );
 
   if (
-    cv.professionalSummary.trim()
+    cv.professionalSummary
+      .trim()
       .length > 0
   ) {
     lines.push("");
@@ -250,6 +252,106 @@ function download(
   URL.revokeObjectURL(
     url
   );
+}
+
+
+function normalizePdfText(
+  text: string
+) {
+  return text
+    .replace(/•/g, "-")
+    .replace(/[—–]/g, "-")
+    .replace(/[“”]/g, '"')
+    .replace(/[‘’]/g, "'");
+}
+
+
+function downloadPdf(
+  name: string,
+  content: string
+) {
+  const pdf =
+    new jsPDF({
+      orientation: "portrait",
+      unit: "mm",
+      format: "a4",
+    });
+
+  const pageWidth =
+    pdf.internal.pageSize.getWidth();
+
+  const pageHeight =
+    pdf.internal.pageSize.getHeight();
+
+  const margin = 18;
+
+  const usableWidth =
+    pageWidth -
+    margin * 2;
+
+  const bottomMargin = 18;
+
+  const lineHeight = 5.5;
+
+  let y = 20;
+
+  pdf.setFont(
+    "helvetica",
+    "normal"
+  );
+
+  pdf.setFontSize(11);
+
+  const normalized =
+    normalizePdfText(
+      content
+    );
+
+  const sourceLines =
+    normalized.split("\n");
+
+  sourceLines.forEach(
+    (sourceLine) => {
+      if (
+        sourceLine.trim()
+          .length === 0
+      ) {
+        y += lineHeight;
+
+        return;
+      }
+
+      const wrappedLines =
+        pdf.splitTextToSize(
+          sourceLine,
+          usableWidth
+        );
+
+      wrappedLines.forEach(
+        (line: string) => {
+          if (
+            y >
+            pageHeight -
+              bottomMargin
+          ) {
+            pdf.addPage();
+
+            y = 20;
+          }
+
+          pdf.text(
+            line,
+            margin,
+            y
+          );
+
+          y += lineHeight;
+        }
+      );
+    }
+  );
+
+  pdf.save(name);
 }
 
 
@@ -621,7 +723,7 @@ function JobPage() {
 
             <TabsContent value="cv">
               <Card className="p-6">
-                <div className="mb-4 flex justify-end gap-2">
+                <div className="mb-4 flex flex-wrap justify-end gap-2">
                   <CopyBtn
                     text={renderCvText(
                       result.cv
@@ -657,6 +759,21 @@ function JobPage() {
                     }
                   >
                     Download .doc
+                  </Button>
+
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() =>
+                      downloadPdf(
+                        `${active.name}-CV.pdf`,
+                        renderCvText(
+                          result.cv
+                        )
+                      )
+                    }
+                  >
+                    Download .pdf
                   </Button>
                 </div>
 
@@ -847,7 +964,7 @@ function JobPage() {
 
             <TabsContent value="cover">
               <Card className="p-6">
-                <div className="mb-4 flex justify-end gap-2">
+                <div className="mb-4 flex flex-wrap justify-end gap-2">
                   <CopyBtn
                     text={
                       result.coverLetter
@@ -879,6 +996,19 @@ function JobPage() {
                     }
                   >
                     Download .doc
+                  </Button>
+
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() =>
+                      downloadPdf(
+                        `${active.name}-CoverLetter.pdf`,
+                        result.coverLetter
+                      )
+                    }
+                  >
+                    Download .pdf
                   </Button>
                 </div>
 
