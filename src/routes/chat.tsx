@@ -479,4 +479,5 @@ function ChatPage() {
       </Card>
     </div>
   );
+  
 }
