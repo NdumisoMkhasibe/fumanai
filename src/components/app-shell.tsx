@@ -21,7 +21,6 @@ import {
   SheetTitle,
 } from "@/components/ui/sheet";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
-import logoAsset from "@/assets/fumanai-logo.png.asset.json";
 import markAsset from "@/assets/fumanai-mark.png";
 
 const NAV = [
@@ -38,13 +37,16 @@ const NAV = [
 
 function Brand() {
   return (
-    <div className="px-4">
+    <div className="flex items-center gap-3 px-4">
       <img
-        src={logoAsset.url}
+        src={markAsset}
         alt="FumanAI — Your Autonomous Dream Job Assistant"
-        className="w-full max-w-[220px] select-none"
+        className="h-12 w-12 shrink-0 rounded-md object-contain select-none"
         draggable={false}
       />
+      <span className="font-[Poppins] text-lg font-semibold tracking-tight">
+        FumanAI
+      </span>
     </div>
   );
 }
@@ -83,9 +85,7 @@ export function AppShell({ children }: { children: ReactNode }) {
         <div className="mt-auto px-4 py-4 text-[11px] text-sidebar-foreground/50">
           {auth.isAuthenticated ? (
             <div className="space-y-2">
-              <p className="break-all">
-                Signed in as: {auth.user?.profile.email}
-              </p>
+              <p className="break-all">{auth.user?.profile.email}</p>
 
               <button
                 onClick={() => auth.removeUser()}
@@ -98,9 +98,9 @@ export function AppShell({ children }: { children: ReactNode }) {
           ) : (
             <button
               onClick={() => auth.signinRedirect()}
-              className="text-sm underline"
+              className="text-sm no-underline"
             >
-              Sign in with Cognito
+              Sign In
             </button>
           )}
         </div>
@@ -138,13 +138,28 @@ export function AppShell({ children }: { children: ReactNode }) {
             <img
               src={markAsset}
               alt="FumanAI"
-              className="h-8 w-8 rounded-md object-cover"
+              className="h-8 w-8 shrink-0 rounded-md object-contain"
             />
 
             <span className="font-[Poppins] font-semibold tracking-tight">
               FumanAI
             </span>
           </div>
+          {auth.isAuthenticated ? (
+            <button
+              onClick={() => auth.removeUser()}
+              className="text-sm"
+            >
+              Sign out
+            </button>
+          ) : (
+            <button
+              onClick={() => auth.signinRedirect()}
+              className="text-sm no-underline"
+            >
+              Sign In
+            </button>
+          )}
         </header>
 
         <main className="flex-1 animate-in fade-in duration-300">
