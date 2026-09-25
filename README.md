@@ -4,6 +4,10 @@
 
 <h1 align="center">FumanAI</h1>
 
+Verification code: `WTC-7ZSU7XN7`
+
+[Watch the FumanAI demo on YouTube](https://youtu.be/Imi8Bg903fU?si=KCOyaBPTtSXY6cLr)
+
 <p align="center">
   <strong>Your Autonomous Dream Job Assistant</strong>
 </p>
