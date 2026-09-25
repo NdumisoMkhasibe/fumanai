@@ -22,6 +22,7 @@ import {
 } from "@/components/ui/sheet";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 import markAsset from "@/assets/fumanai-mark.png";
+import markTransparentAsset from "@/assets/fumanai-mark-transparent.png";
 
 const NAV = [
   { to: "/", label: "Home", icon: Home },
@@ -35,13 +36,23 @@ const NAV = [
   { to: "/settings", label: "Settings", icon: Settings },
 ] as const;
 
-function Brand() {
+function Brand({ large = false }: { large?: boolean }) {
   return (
-    <div className="flex items-center gap-3 px-4">
+    <div
+      className={
+        large
+          ? "flex h-[132px] w-full -translate-x-2 translate-y-4 flex-col items-center justify-center gap-2 px-4 text-center"
+          : "flex items-center gap-3 px-4"
+      }
+    >
       <img
-        src={markAsset}
+        src={markTransparentAsset}
         alt="FumanAI — Your Autonomous Dream Job Assistant"
-        className="h-12 w-12 shrink-0 rounded-md object-contain select-none"
+        className={
+          large
+            ? "h-24 w-24 shrink-0 object-contain select-none"
+            : "h-12 w-12 shrink-0 object-contain select-none"
+        }
         draggable={false}
       />
       <span className="font-[Poppins] text-lg font-semibold tracking-tight">
@@ -78,7 +89,7 @@ export function AppShell({ children }: { children: ReactNode }) {
     <div className="flex min-h-screen bg-background">
       {/* Desktop sidebar */}
       <aside className="hidden md:flex md:w-64 md:flex-col md:bg-sidebar md:py-6">
-        <Brand />
+        <Brand large />
 
         <NavList />
 
