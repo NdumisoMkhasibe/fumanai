@@ -1,21 +1,20 @@
+const getAppOrigin = () => {
+  if (typeof window !== "undefined") {
+    return window.location.origin;
+  }
+
+  return "https://fumanai.vercel.app";
+};
+
 export const cognitoAuthConfig = {
   authority:
     "https://cognito-idp.af-south-1.amazonaws.com/af-south-1_yUoNrREYk",
-
   client_id: "r69nhg9b3afihfp5u0mug61ic",
-
-  redirect_uri: "http://localhost:8080",
-
+  redirect_uri: getAppOrigin(),
   response_type: "code",
-
   scope: "openid email",
-
   onSigninCallback: () => {
-    window.history.replaceState(
-      {},
-      document.title,
-      window.location.pathname
-    );
+    window.history.replaceState({}, document.title, window.location.pathname);
   },
 };
 
